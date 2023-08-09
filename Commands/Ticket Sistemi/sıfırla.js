@@ -2,7 +2,7 @@ const { ChatInputCommandInteraction, SlashCommandBuilder, Client, EmbedBuilder, 
 const mzrdb = require("croxydb");
 
 module.exports = {
-  subCommand: "destek.sıfırla",
+  subCommand: "ticket.sıfırla",
   /**
    * @param {Client} client
    * @param {ChatInputCommandInteraction} interaction
