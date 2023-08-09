@@ -15,25 +15,25 @@ module.exports = {
     .setTitle("Yardım Menüm")
     .addFields([
     { name: "Yetkili Ayarlamalı Komutlarım", value: `
-🎫 **</destek kur:0>**
+🎫 **</ticket kur:0>**
 Destek sistemi embedını gönderir.
 
-🎫 **</destek ayarla-log:0>**
+🎫 **</ticket ayarla-log:0>**
 Destek log kanalını ayarlarsınız.
 
-🎫 **</destek ayarla-yetkili:0>**
+🎫 **</ticket ayarla-yetkili:0>**
 Destek yetkilisi rolünü ayarlarsınız.
 
-🎫 **</destek ayarla-limit:0>**
+🎫 **</ticket ayarla-limit:0>**
 Destek talebi oluşturma limiti ayarlarsınız.
 
-🎫 **</destek ayarla-kategori:0>**
+🎫 **</ticket ayarla-kategori:0>**
 Destek taleplerinin bulunmasını istediğiniz kategoriyi ayarlarsınız.
 
-🎫 **</sıfırla:0>**
+🎫 **</ticket sıfırla:0>**
 Destek sisteminde sıfırlamak istediğinizi sıfırlarsınız.
 
-🎫 **</ayarlar:0>**
+🎫 **</ticket ayarlar:0>**
 Ayarları görüntülersiniz.`, inline: false},
     { name: "Kullanıcı Komutlarım", value: `
 🙍‍♂️ **</yardım:0>**
@@ -47,7 +47,5 @@ Botu davet edersiniz ve destek sunucusuna katılabilirsiniz.`, inline: true},
     ])
     .setColor("Blurple")
     await interaction.editReply({embeds: [embed] });
-
     }
-
 }
