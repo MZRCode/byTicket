@@ -13,7 +13,6 @@ client.config = require("./config.json");
 client.commands = new Collection();
 client.subCommands = new Collection();
 client.events = new Collection();
-client.guildConfigs = new Collection();
 
 const { loadEvents } = require("./Handlers/eventHandler");
 loadEvents(client);
@@ -123,7 +122,7 @@ switch (selectedValue) {
       const existingUsers = mzrdb.get(mzruyeKey) || [];
       mzrdb.set(mzruyeKey, [...existingUsers, user.id]);
     
-      const odeme = new ActionRowBuilder()
+      const mzrButon = new ActionRowBuilder()
       .addComponents(
         new ButtonBuilder()
           .setCustomId(`kapat`)
@@ -149,7 +148,7 @@ switch (selectedValue) {
       .setColor("Blue")
     
       interaction.editReply({ content: `✅ Kanalın başarıyla **oluşturuldu!**\n<:chat:904102695613374485> **Kanal:** <#${channel.id}>`})
-      channel.send({ embeds: [embed], content: `${user} **&** <@&${yetkiliRol}>`, components: [odeme] })
+      channel.send({ embeds: [embed], content: `${user} **&** <@&${yetkiliRol}>`, components: [mzrButon] })
       }
         break;
     case 'mzroption2':
@@ -195,7 +194,7 @@ switch (selectedValue) {
       const existingUsers = mzrdb.get(mzruyeKey) || [];
       mzrdb.set(mzruyeKey, [...existingUsers, user.id]);
 
-      const odeme = new ActionRowBuilder()
+      const mzrButon = new ActionRowBuilder()
       .addComponents(
         new ButtonBuilder()
           .setCustomId(`kapat`)
@@ -221,14 +220,83 @@ switch (selectedValue) {
       .setColor("Blue")
     
       interaction.editReply({ content: `✅ Kanalın başarıyla **oluşturuldu!**\n<:chat:904102695613374485> **Kanal:** <#${channel.id}>`})
-      channel.send({ embeds: [embed], content: `${user} **&** <@&${yetkiliRol2}>`, components: [odeme] })
+      channel.send({ embeds: [embed], content: `${user} **&** <@&${yetkiliRol2}>`, components: [mzrButon] })
       }
         break;
     case 'mzroption3':
-        await interaction.editReply('İyidir nasılsın!');
+      if (!interaction.guild) return;
+
+      const yetkiliRol3 = mzrdb.get(`mzryetkili_${guild.id}`);
+      const kanallar3 = Object.keys(mzrdb.get(`mzrkanal_${guild.id}_${user.id}`) || {}).length;
+      const limit3 = mzrdb.get(`mzrlimit_${guild.id}`);
+      const kategori3 = mzrdb.get(`mzrkategori_${guild.id}`);
+
+      if (!limit3) {
+        return interaction.editReply(`Ticket oluşturma limiti ayarlı değil! Ayarlamak için **/ayarla limit**`)
+      }
+
+      if  (kanallar3 >= limit3) {
+        return interaction.editReply(`Maksimum **${limit3}** tane ticket oluştura bilirsiin!`)
+      } else {
+      const channel = await guild.channels.create({
+        name: `ticket-${user.username}`,
+        type: ChannelType.GuildText,
+        parent: kategori3,
+        reason: 'Ticket oluşturuldu!',
+        permissionOverwrites: [
+          {
+            id: guild.id,
+            deny: [PermissionFlagsBits.ViewChannel],
+          },
+           {
+            id: user.id,
+            allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.AttachFiles],
+          },
+          {
+            id: yetkiliRol3,
+            allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.AttachFiles],
+          },
+        ],
+      })
+      const mzrkanalKey = `mzrkanal_${guild.id}_${user.id}`;
+      const existingsUsers = mzrdb.get(mzrkanalKey) || [];
+      mzrdb.set(mzrkanalKey, [...existingsUsers, channel.id]);
+
+      const mzruyeKey = `mzruye_${guild.id}_${channel.id}`;
+      const existingUsers = mzrdb.get(mzruyeKey) || [];
+      mzrdb.set(mzruyeKey, [...existingUsers, user.id]);
+
+      const mzrButon = new ActionRowBuilder()
+      .addComponents(
+        new ButtonBuilder()
+          .setCustomId(`kapat`)
+          .setLabel('Kapat')
+          .setEmoji("🔒")
+          .setStyle(ButtonStyle.Danger))
+      .addComponents(
+        new ButtonBuilder()
+          .setCustomId(`nedenlekapat`)
+          .setLabel('Nedeniyle Kapat')
+          .setEmoji("🔒")
+          .setStyle(ButtonStyle.Danger))
+      .addComponents(
+        new ButtonBuilder()
+          .setCustomId(`kaydet`)
+          .setLabel('Kaydet')
+          .setEmoji("✅")
+          .setStyle(ButtonStyle.Success))
+    
+      const embed = new EmbedBuilder()
+      .setAuthor({ name: user.username, iconURL: user.displayAvatarURL() })
+      .setDescription(`Selam, Hoşgeldin **${user.username}**!\nDestek yetkilileri birazdan sizinle ilgilenicekler.\n\nSeçilen Destek Tipi: **Sunucu üyeleri ile iligili**`)
+      .setColor("Blue")
+    
+      interaction.editReply({ content: `✅ Kanalın başarıyla **oluşturuldu!**\n<:chat:904102695613374485> **Kanal:** <#${channel.id}>`})
+      channel.send({ embeds: [embed], content: `${user} **&** <@&${yetkiliRol3}>`, components: [mzrButon] })
+      }
         break;
     default:
-        await interaction.editReply('Geçersiz bir seçenek seçildi.');
+        await interaction.editReply('Geçersiz bir seçenek seçildi!');
         break;
 }
 });
@@ -424,4 +492,4 @@ client.on('interactionCreate', async (interaction) => {
       }
     });
 
-client.login(client.config.token)
+client.login(client.config.token);
