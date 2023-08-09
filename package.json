@@ -10,7 +10,7 @@
     "mzr-development",
     "mzr-dev"
   ],
-  "author": "ZeKe#0057",
+  "author": "mzrdev",
   "license": "ISC",
   "dependencies": {
     "ascii-table": "^0.0.9",
