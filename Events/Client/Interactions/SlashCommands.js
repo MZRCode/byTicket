@@ -23,7 +23,7 @@ module.exports = {
         if(subCommand) {
             const subCommandFile = client.subCommands.get(`${interaction.commandName}.${subCommand}`);
             if(!subCommandFile) return interaction.reply({ content: "Bu komut artık kullanılmıyor!", ephemeral: true });
-            subCommandFile.execute(interaction, client);
-        } else command.execute(interaction, client);
+            subCommandFile.execute();
+        } else command.execute();
     }
 }
